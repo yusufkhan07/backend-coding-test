@@ -10,11 +10,19 @@
 - Create a blog service that allows the creation and management of blog articles which will be stored both on the PostgreSQL instance and on a Firebase firestore instance. All api routes of the blog service should be protected and only accessible through the admin role.
 - A public api route should be provided that returns a paginated list of blog articles.
 - Develop a CRON Job that will run once a day and will add a random word to the end of each blog title.
-- Deploy all work as instructed and provide the API url along with the admin user credentials. Also provide the public link to your test project.
+- Deploy all work as instructed.
 
 ## Extra Points
 
 - Generate an [OpenAPI](https://swagger.io/specification/) documentation for all routes
+
+## Good Job!
+
+After completing the coding test, please provide the details listed below:
+
+- API route links and Open API documentation
+- Public github link for all test completed
+- Any other information required to run and access the project such as environment keys (`.env`) and admin login
 
 ## Learn More
 
