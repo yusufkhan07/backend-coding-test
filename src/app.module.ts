@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import * as admin from 'firebase-admin';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -29,4 +30,12 @@ import { UsersModule } from './users';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private readonly configService: ConfigService) {
+    admin.initializeApp({
+      credential: admin.credential.cert(
+        this.configService.get('GOOGLE_APPLICATION_CREDENTIALS'),
+      ),
+    });
+  }
+}

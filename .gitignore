@@ -25,3 +25,5 @@ yarn-error.log*
 .serverless
 .aws/credentials
 dist
+
+.firebase-credentials.json
