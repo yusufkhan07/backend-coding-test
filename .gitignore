@@ -24,3 +24,8 @@ yarn-error.log*
 .env.production.local
 
 
+.history
+.build
+.serverless
+.aws/credentials
+dist
