@@ -34,3 +34,57 @@ To learn more about some of the technologies used, take a look at the following 
 - [AWS Lambda](https://aws.amazon.com/lambda/getting-started/)
 - [PostgreSQL](https://www.postgresql.org/)
 - [ElephantSQL](https://www.elephantsql.com/docs/index.html)
+
+# Solution
+
+## Setup environment variables
+
+- make a copy of the file `.env.example` and name it `.env`
+- fill the appropriate env variable values in the `.env` file
+
+
+## Firebase Admin Setup
+
+- Setup a firebase account.
+- Generate a credentials JSON file and upload it to S3.
+- Proivde the credentials JSON file url in `.env` file as a variable named `GOOGLE_APPLICATION_CREDENTIALS_S3_HTTPS_URL`
+
+## Running Locally
+
+- Install dependencies using `npm install`
+- Run code using `npm run start`
+
+## Deploying
+
+- Setup AWS account and generate credentails. Make sure the user have appropriate permissions.
+- Provide the credentails to serverless as instructed here: https://www.serverless.com/framework/docs/providers/aws/guide/credentials/
+- Make sure the DB & Firebase credentials provided in the `.env` file are accessable from your AWS server.
+- Deploy using `sls deploy -v`
+
+## Getting Auth Token
+
+We're using firebase Authentication and tokens can be generated on the frontend only. Firebase-admin doesn't have the abilitiy to generate token. For testing purposes, I have created a html/js client and hosted it on s3 at the following URL: https://stayr-static.s3.us-east-2.amazonaws.com/test.html. 
+
+You can use this to generate auth tokens using email and password. Plase note that this html client uses my firebase credentials. You'll probably need to replicate this HTML page, add your own firebase credentials and then generate access token.
+
+
+## Cron
+
+Nestjs provides a Cron Module but it can't be used because we're using serverless design pattern.
+
+We have to create a CloudWatch cron job which will call an SNS topic once a day.
+
+The SNS will then call our REST API endpoint which is responsible for executing the task we need.
+
+I've added an endpoint `/blogs/randomize-titles` which the SNS will call. This endpoint is responsible for add random words in the title.
+
+## Improvements
+
+ - Use Migrations instead of the 'synchronize: true' option TypeOrm Configuration.
+
+## Deployment
+
+I've deployed the code using serverless and the swagger docs can be accessed at `https://wnhvetxjsk.execute-api.us-east-1.amazonaws.com/dev/api/#/`
+
+When running the code locally, make sure the select the appropriate `server` in the `servers` dropdown in the swagger ui.
+ 
