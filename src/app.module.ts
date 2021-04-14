@@ -10,7 +10,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth';
 import { UsersModule, User } from './users';
 import { RolesModule } from './roles';
-import { BlogsModule } from './blogs';
+import { BlogsModule, Blog } from './blogs';
 
 function initializeFirebaseAdmin(credentialsHttpsUrl: string) {
   return new Promise((resolve, reject) => {
@@ -25,9 +25,13 @@ function initializeFirebaseAdmin(credentialsHttpsUrl: string) {
         resp.on('end', () => {
           try {
             const credentials = JSON.parse(data);
+
             admin.initializeApp({
               credential: admin.credential.cert(credentials),
             });
+
+            admin.firestore().settings({ ignoreUndefinedProperties: true });
+
             return resolve(void 0);
           } catch (err) {
             return reject(new Error('Unable to initialize firebase-admin'));
@@ -55,7 +59,7 @@ function initializeFirebaseAdmin(credentialsHttpsUrl: string) {
         password: configService.get<string>('DATABASE_PASS', 'postgres'),
         database: configService.get<string>('DATABASE', 'public'),
         username: configService.get<string>('DATABASE_USER', 'postgres'),
-        entities: [User],
+        entities: [User, Blog],
       }),
     }),
     RolesModule,

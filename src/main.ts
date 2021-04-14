@@ -14,6 +14,7 @@ async function bootstrap() {
   app.use(helmet());
 
   const config = new DocumentBuilder()
+    .addBearerAuth()
     .setContact('Yousuf Khan', null, 'yusufkhanjee@gmail.com')
     .setVersion('1.0')
     .build();
