@@ -34,6 +34,7 @@ function initializeFirebaseAdmin(credentialsHttpsUrl: string) {
 
             return resolve(void 0);
           } catch (err) {
+            console.log('initializeFirebaseAdmin -> err', err);
             return reject(new Error('Unable to initialize firebase-admin'));
           }
         });
@@ -72,9 +73,13 @@ function initializeFirebaseAdmin(credentialsHttpsUrl: string) {
       provide: 'firebase',
       inject: [ConfigService],
       useFactory: async (configService) => {
-        return initializeFirebaseAdmin(
-          configService.get('GOOGLE_APPLICATION_CREDENTIALS_S3_HTTPS_URL'),
-        );
+        try {
+          await initializeFirebaseAdmin(
+            configService.get('GOOGLE_APPLICATION_CREDENTIALS_S3_HTTPS_URL'),
+          );
+        } catch (err) {
+          console.log('err', err);
+        }
       },
     },
   ],
