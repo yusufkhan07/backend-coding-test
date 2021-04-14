@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as admin from 'firebase-admin';
+import * as https from 'https';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -9,6 +10,34 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth';
 import { UsersModule } from './users';
 import { RolesModule } from './roles';
+
+function initializeFirebaseAdmin(credentialsHttpsUrl: string) {
+  return new Promise((resolve, reject) => {
+    https
+      .get(credentialsHttpsUrl, (resp) => {
+        let data = '';
+        // A chunk of data has been received.
+        resp.on('data', (chunk) => {
+          data += chunk;
+        });
+        // The whole response has been received. Print out the result.
+        resp.on('end', () => {
+          try {
+            const credentials = JSON.parse(data);
+            admin.initializeApp({
+              credential: admin.credential.cert(credentials),
+            });
+            return resolve(void 0);
+          } catch (err) {
+            return reject(new Error('Unable to initialize firebase-admin'));
+          }
+        });
+      })
+      .on('error', (err) => {
+        return reject('Unable to fetch firebase-admin credentials');
+      });
+  });
+}
 
 @Module({
   imports: [
@@ -30,14 +59,17 @@ import { RolesModule } from './roles';
     RolesModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: 'firebase',
+      inject: [ConfigService],
+      useFactory: async (configService) => {
+        return initializeFirebaseAdmin(
+          configService.get('GOOGLE_APPLICATION_CREDENTIALS_S3_HTTPS_URL'),
+        );
+      },
+    },
+  ],
 })
-export class AppModule {
-  constructor(private readonly configService: ConfigService) {
-    admin.initializeApp({
-      credential: admin.credential.cert(
-        this.configService.get('GOOGLE_APPLICATION_CREDENTIALS'),
-      ),
-    });
-  }
-}
+export class AppModule {}
