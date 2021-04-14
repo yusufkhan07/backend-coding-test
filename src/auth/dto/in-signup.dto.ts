@@ -5,5 +5,5 @@ export class InSignUpDto {
 
   name: string;
 
-  dateOfBirth: Date;
+  dateOfBirth: string;
 }

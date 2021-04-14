@@ -12,13 +12,20 @@ export class AuthService {
 
   async signup(dto: InSignUpDto) {
     try {
-      await admin.auth().createUser({
+      const user = await admin.auth().createUser({
         email: dto.email,
         password: dto.password,
         displayName: dto.name,
       });
 
-      this.eventBus.publish(new FirebaseAuthUserCreatedEvent());
+      this.eventBus.publish(
+        new FirebaseAuthUserCreatedEvent(
+          user.uid,
+          dto.name,
+          dto.email,
+          dto.dateOfBirth,
+        ),
+      );
     } catch (err) {
       if (err.errorInfo.code === 'auth/email-already-exists') {
         throw new BadRequestException('User already exists');
