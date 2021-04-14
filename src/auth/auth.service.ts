@@ -18,6 +18,10 @@ export class AuthService {
         displayName: dto.name,
       });
 
+      await admin.auth().setCustomUserClaims(user.uid, {
+        roles: [dto.role],
+      });
+
       this.eventBus.publish(
         new FirebaseAuthUserCreatedEvent(
           user.uid,
