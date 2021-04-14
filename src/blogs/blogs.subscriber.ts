@@ -35,14 +35,16 @@ export class BlogSubscriber implements EntitySubscriberInterface<Blog> {
     const db = admin.firestore();
 
     // create a new blog
-    db.collection('blogs').doc(String(event.entity.id)).update(
-      {
-        id: event.entity.id,
-        title: event.entity.title,
-        description: event.entity.description,
-      },
-      {},
-    );
+    db.collection('blogs')
+      .doc(String(event.entity?.id || event.databaseEntity?.id))
+      .update(
+        {
+          id: event.entity.id,
+          title: event.entity.title,
+          description: event.entity.description,
+        },
+        {},
+      );
   }
 
   afterRemove(event: RemoveEvent<Blog>) {

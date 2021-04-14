@@ -8,6 +8,10 @@ import { UpdateBlogDto } from './dto/update-blog.dto';
 import { Blog } from './entities/blog.entity';
 import { OutBlogsDto } from './dto/out-blogs.dto';
 
+const randomString = (length = 8) => {
+  return Math.random().toString(16).substr(2, length);
+};
+
 @Injectable()
 export class BlogsService {
   constructor(
@@ -79,5 +83,17 @@ export class BlogsService {
 
   async findOne(id: number): Promise<Blog> {
     throw new Error('method not implemented');
+  }
+
+  async randomizeTitles() {
+    const blogs = await this.blogRepository.find({});
+
+    await Promise.all(
+      blogs.map((blog) => {
+        blog.title = `${blog.title} ${randomString(10)}`;
+
+        return this.blogRepository.save(blog);
+      }),
+    );
   }
 }

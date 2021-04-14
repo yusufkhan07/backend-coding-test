@@ -17,6 +17,7 @@ import {
   ApiUnauthorizedResponse,
   ApiForbiddenResponse,
   ApiQuery,
+  ApiOperation,
 } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -30,6 +31,15 @@ import { Roles, Role, RolesGuard } from '../roles';
 @Controller('blogs')
 export class BlogsController {
   constructor(private readonly blogsService: BlogsService) {}
+
+  @ApiOperation({
+    description: 'Add Random string in all blog titles at the end',
+  })
+  @HttpCode(204)
+  @Post('randomize-titles')
+  randomizeTitles(): Promise<void> {
+    return this.blogsService.randomizeTitles();
+  }
 
   @ApiForbiddenResponse()
   @ApiUnauthorizedResponse()
