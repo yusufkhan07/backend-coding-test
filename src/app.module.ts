@@ -61,6 +61,7 @@ function initializeFirebaseAdmin(credentialsHttpsUrl: string) {
         database: configService.get<string>('DATABASE', 'public'),
         username: configService.get<string>('DATABASE_USER', 'postgres'),
         entities: [User, Blog],
+        synchronize: true,
       }),
     }),
     RolesModule,
