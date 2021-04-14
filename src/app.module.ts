@@ -8,6 +8,7 @@ import { AppService } from './app.service';
 
 import { AuthModule } from './auth';
 import { UsersModule } from './users';
+import { RolesModule } from './roles';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { UsersModule } from './users';
         username: configService.get<string>('DATABASE_USER', 'postgres'),
       }),
     }),
+    RolesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
