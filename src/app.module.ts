@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import * as admin from 'firebase-admin';
 import * as https from 'https';
 
@@ -8,7 +8,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 import { AuthModule } from './auth';
-import { UsersModule } from './users';
+import { UsersModule, User } from './users';
 import { RolesModule } from './roles';
 import { BlogsModule } from './blogs';
 
@@ -48,13 +48,14 @@ function initializeFirebaseAdmin(credentialsHttpsUrl: string) {
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
+      useFactory: (configService: ConfigService): TypeOrmModuleOptions => ({
         type: 'postgres' as const,
         host: configService.get<string>('DATABASE_HOST', 'localhost'),
         port: configService.get<number>('DATABASE_PORT', 5432),
         password: configService.get<string>('DATABASE_PASS', 'postgres'),
         database: configService.get<string>('DATABASE', 'public'),
         username: configService.get<string>('DATABASE_USER', 'postgres'),
+        entities: [User],
       }),
     }),
     RolesModule,
