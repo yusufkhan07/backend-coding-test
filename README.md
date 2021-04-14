@@ -86,5 +86,14 @@ I've added an endpoint `/blogs/randomize-titles` which the SNS will call. This e
 
 I've deployed the code using serverless and the swagger docs can be accessed at `https://wnhvetxjsk.execute-api.us-east-1.amazonaws.com/dev/api/#/`
 
-When running the code locally, make sure the select the appropriate `server` in the `servers` dropdown in the swagger ui.
- 
+When running the code locally, make sure the select the appropriate `server` in the `servers` dropdown in the swagger ui. 
+
+## Testing locally
+
+For testing the code, you can run the code locally as mentioned previously.
+
+Once the app is running, create a user using the signup api.
+
+Use this email, password in the Client html page (hosted on s3) to generate a login token.
+
+Once you have the login token, you can use that to call the `blog` apis.
