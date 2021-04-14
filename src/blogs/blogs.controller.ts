@@ -9,12 +9,14 @@ import {
   HttpCode,
   ParseIntPipe,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import {
   ApiTags,
   ApiBearerAuth,
   ApiUnauthorizedResponse,
   ApiForbiddenResponse,
+  ApiQuery,
 } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -39,9 +41,25 @@ export class BlogsController {
     return this.blogsService.create(createBlogDto);
   }
 
+  @ApiQuery({
+    name: 'per_page',
+    required: false,
+    type: Number,
+    description: 'Number of results to return per page',
+  })
+  @ApiQuery({
+    name: 'cur_page',
+    required: false,
+    type: Number,
+    description:
+      'A page number within the paginated result set (starts from 1)',
+  })
   @Get()
-  findAll() {
-    return this.blogsService.findAll();
+  findAll(
+    @Query('per_page') perPage?: number,
+    @Query('cur_page') curPage?: number,
+  ) {
+    return this.blogsService.findAll(curPage || 1, perPage || 10);
   }
 
   @Get(':id')
