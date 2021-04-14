@@ -10,6 +10,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth';
 import { UsersModule } from './users';
 import { RolesModule } from './roles';
+import { BlogsModule } from './blogs';
 
 function initializeFirebaseAdmin(credentialsHttpsUrl: string) {
   return new Promise((resolve, reject) => {
@@ -57,6 +58,7 @@ function initializeFirebaseAdmin(credentialsHttpsUrl: string) {
       }),
     }),
     RolesModule,
+    BlogsModule,
   ],
   controllers: [AppController],
   providers: [
