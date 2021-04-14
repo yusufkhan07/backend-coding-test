@@ -81,8 +81,8 @@ export class BlogsService {
     );
   }
 
-  async findOne(id: number): Promise<Blog> {
-    throw new Error('method not implemented');
+  async findOne(id: number): Promise<Blog | null> {
+    return (await this.blogRepository.findByIds([id])).pop() || null;
   }
 
   async randomizeTitles() {

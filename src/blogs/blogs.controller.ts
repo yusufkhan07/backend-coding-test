@@ -10,6 +10,7 @@ import {
   ParseIntPipe,
   UseGuards,
   Query,
+  NotFoundException,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -18,6 +19,7 @@ import {
   ApiForbiddenResponse,
   ApiQuery,
   ApiOperation,
+  ApiNotFoundResponse,
 } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -72,9 +74,16 @@ export class BlogsController {
     return this.blogsService.findAll(curPage || 1, perPage || 10);
   }
 
+  @ApiNotFoundResponse()
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number): Promise<Blog> {
-    return this.blogsService.findOne(+id);
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<Blog> {
+    const found = await this.blogsService.findOne(+id);
+
+    if (!found) {
+      throw new NotFoundException();
+    }
+
+    return found;
   }
 
   @ApiForbiddenResponse()
