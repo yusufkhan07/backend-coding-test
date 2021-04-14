@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { ValidationPipe } from '@nestjs/common';
 
 // import * as csurf from 'csurf';
 import * as helmet from 'helmet';
@@ -12,6 +13,14 @@ async function bootstrap() {
   app.enableCors();
   // app.use(csurf());
   app.use(helmet());
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    }),
+  );
 
   const config = new DocumentBuilder()
     .addBearerAuth()
